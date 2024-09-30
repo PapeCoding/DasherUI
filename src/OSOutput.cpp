@@ -1,13 +1,16 @@
 #include "OSOutput.h"
 
-#include <codecvt>
 #include <string>
+
+#ifdef _WIN32
+#include <codecvt>
 
 #define WIN32_LEAN_AND_MEAN      // Exclude rarely-used stuff from Windows headers
 #include <windows.h>
 #include <stringapiset.h>
 #include <WinUser.h>
 #undef WIN32_LEAN_AND_MEAN
+#endif
 
 OSOutput::OSOutput(){}
 
@@ -15,6 +18,7 @@ OSOutput::~OSOutput(){}
 
 void OSOutput::deleteCharacter()
 {
+#ifdef _WIN32
     INPUT fakekey[2];
     fakekey[0].type = fakekey[1].type = INPUT_KEYBOARD;
     fakekey[0].ki.wVk = fakekey[1].ki.wVk = VK_BACK;
@@ -22,10 +26,12 @@ void OSOutput::deleteCharacter()
     fakekey[1].ki.dwFlags = KEYEVENTF_KEYUP;
 
     SendInput(2, fakekey, sizeof(INPUT));
+#endif
 }
 
 void OSOutput::outputCharacter(const std::string &sText)
 {
+#ifdef _WIN32
     INPUT fakekey[2];
     if(sText[0] == '\r' && sText[1] == '\n') {
         // Newline, so we want to fake an enter
@@ -51,4 +57,5 @@ void OSOutput::outputCharacter(const std::string &sText)
 
         delete[] wstr;
     }
+#endif
 }
