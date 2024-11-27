@@ -32,5 +32,6 @@ private:
 	std::unique_ptr <Dasher::XmlSettingsStore> Settings;
 	std::unique_ptr<DasherController> Controller;
 	std::vector<std::string> Alphabets;
+	std::vector<std::string> ColorPalettes;
 };
 

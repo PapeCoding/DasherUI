@@ -83,7 +83,7 @@ target_link_libraries(DasherUI PRIVATE imgui glfw OpenGL::GL DasherCore nfd)
 # Copy Data files
 file(GLOB RESOURCE_FILES
   ${PROJECT_SOURCE_DIR}/DasherCore/Data/alphabets/alphabet*.xml
-  ${PROJECT_SOURCE_DIR}/DasherCore/Data/colours/colour*.xml
+  ${PROJECT_SOURCE_DIR}/DasherCore/Data/colors/color*.xml
   ${PROJECT_SOURCE_DIR}/DasherCore/Data/control/control*.xml
   ${PROJECT_SOURCE_DIR}/DasherCore/Data/training/training*.txt
 )

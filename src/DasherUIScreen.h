@@ -11,23 +11,20 @@ public:
 	DasherUIScreen();
 
 	std::pair<Dasher::screenint, Dasher::screenint> TextSize(Label* label, unsigned iFontSize) override;
-	void DrawString(Label* label, Dasher::screenint x, Dasher::screenint y, unsigned iFontSize, int iColour) override;
-	void DrawRectangle(Dasher::screenint x1, Dasher::screenint y1, Dasher::screenint x2, Dasher::screenint y2, int Colour, int iOutlineColour, int iThickness) override;
-	void DrawCircle(Dasher::screenint iCX, Dasher::screenint iCY, Dasher::screenint iR, int iFillColour, int iLineColour, int iLineWidth) override;
-	void Polyline(point* Points, int Number, int iWidth, int Colour) override;
-	void Polygon(point* Points, int Number, int fillColour, int outlineColour, int lineWidth) override;
 	void Display() override;
-	void SetColourScheme(const Dasher::CColourIO::ColourInfo* pColourScheme) override;
 	bool IsPointVisible(Dasher::screenint x, Dasher::screenint y) override;
-
-	bool MultiSizeFonts() override { return true; }
-	
-	bool SetCanvasSize(ImVec2 CanvasPos, ImVec2 CanvasSize);
+		
+	bool SetCanvasSize(const ImVec2 position, const ImVec2 size);
 
 	bool GetScreenCoords(Dasher::screenint& iX, Dasher::screenint& iY, Dasher::CDasherView* pView) override;
 
+    void DrawString(Label* label, Dasher::screenint x, Dasher::screenint y, unsigned iFontSize, const Dasher::ColorPalette::Color& color) override;
+    void DrawRectangle(Dasher::screenint x1, Dasher::screenint y1, Dasher::screenint x2, Dasher::screenint y2, const Dasher::ColorPalette::Color& color, const Dasher::ColorPalette::Color& outlineColor, int iThickness) override;
+    void DrawCircle(Dasher::screenint iCX, Dasher::screenint iCY, Dasher::screenint iR, const Dasher::ColorPalette::Color& fillColor, const Dasher::ColorPalette::Color& lineColor, int iLineWidth) override;
+    void Polyline(point* Points, int Number, int iWidth, const Dasher::ColorPalette::Color& color) override;
+    void Polygon(point* Points, int Number, const Dasher::ColorPalette::Color& fillColor, const Dasher::ColorPalette::Color& outlineColor, int lineWidth) override;
+
 private:
-	const Dasher::CColourIO::ColourInfo* pColorScheme;
 	ImVec2 CanvasPos;
 	ImVec2 CanvasSize;
 

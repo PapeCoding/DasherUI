@@ -3,7 +3,7 @@
 #include "MainWindow.h"
 #include "imgui/imgui_internal.h"
 
-DasherUIScreen::DasherUIScreen(): Dasher::CDasherScreen(100,100), CScreenCoordInput(0, _("Mouse Input"))
+DasherUIScreen::DasherUIScreen(): Dasher::CDasherScreen(100,100), CScreenCoordInput("Mouse Input")
 {
 	Font = MainWindow::LoadFonts(50.0f);
 }
@@ -14,89 +14,7 @@ std::pair<Dasher::screenint, Dasher::screenint> DasherUIScreen::TextSize(Label* 
 	return {static_cast<Dasher::screenint>(Size.x), static_cast<Dasher::screenint>(Size.y)};
 }
 
-void DasherUIScreen::DrawString(Label* label, Dasher::screenint x, Dasher::screenint y, unsigned iFontSize, int iColour)
-{
-	const Dasher::CColourIO::ColourInfo::PaletteColor Color = this->pColorScheme->Colors[iColour];
-	const ImVec4 ImColor = { static_cast<float>(Color.Red) / 255.0f, static_cast<float>(Color.Green) / 255.0f, static_cast<float>(Color.Blue) / 255.0f, 1.0f };
-	const ImVec2 Pos = { static_cast<float>(x),static_cast<float>(y)};
-	ImGui::GetWindowDrawList()->AddText(Font, static_cast<float>(iFontSize), Pos + CanvasPos, ImGui::ColorConvertFloat4ToU32(ImColor), label->m_strText.c_str());
-}
-
-void DasherUIScreen::DrawRectangle(Dasher::screenint x1, Dasher::screenint y1, Dasher::screenint x2, Dasher::screenint y2, int Colour, int iOutlineColour, int iThickness)
-{
-	const Dasher::CColourIO::ColourInfo::PaletteColor FillColor = this->pColorScheme->Colors[Colour];
-	const ImVec4 ImFillColor = { static_cast<float>(FillColor.Red) / 255.0f, static_cast<float>(FillColor.Green) / 255.0f, static_cast<float>(FillColor.Blue) / 255.0f, 1.0f };
-	const ImVec2 p1 = { static_cast<float>(x1), static_cast<float>(y1)};
-	const ImVec2 p2 = { static_cast<float>(x2), static_cast<float>(y2)};
-
-	ImGui::GetWindowDrawList()->AddRectFilled(CanvasPos + p1, CanvasPos + p2, ImGui::ColorConvertFloat4ToU32(ImFillColor));
-
-	if(iThickness > 0)
-	{
-		const Dasher::CColourIO::ColourInfo::PaletteColor OutlineColor = this->pColorScheme->Colors[iOutlineColour > 0 ? iOutlineColour : 3]; //Apparently Outline Color 3 is the default
-		const ImVec4 ImOutlineColor = { static_cast<float>(OutlineColor.Red) / 255.0f, static_cast<float>(OutlineColor.Green) / 255.0f, static_cast<float>(OutlineColor.Blue) / 255.0f, 1.0f };
-
-		ImGui::GetWindowDrawList()->AddRect(CanvasPos + p1, CanvasPos + p2, ImGui::ColorConvertFloat4ToU32(ImOutlineColor),0,0, static_cast<float>(iThickness));
-	}
-}
-
-void DasherUIScreen::DrawCircle(Dasher::screenint iCX, Dasher::screenint iCY, Dasher::screenint iR, int iFillColour, int iLineColour, int iLineWidth)
-{
-	const Dasher::CColourIO::ColourInfo::PaletteColor FillColor = this->pColorScheme->Colors[iFillColour];
-	const ImVec4 ImFillColor = { static_cast<float>(FillColor.Red) / 255.0f, static_cast<float>(FillColor.Green) / 255.0f, static_cast<float>(FillColor.Blue) / 255.0f, 1.0f };
-
-	ImGui::GetWindowDrawList()->AddCircleFilled(CanvasPos + ImVec2(static_cast<float>(iCX), static_cast<float>(iCY)), static_cast<float>(iR), ImGui::ColorConvertFloat4ToU32(ImFillColor));
-
-	if (iLineWidth > 0)
-	{
-		const Dasher::CColourIO::ColourInfo::PaletteColor OutlineColor = this->pColorScheme->Colors[iLineColour > 0 ? iLineColour : 3];
-		const ImVec4 ImOutlineColor = { static_cast<float>(OutlineColor.Red) / 255.0f, static_cast<float>(OutlineColor.Green) / 255.0f, static_cast<float>(OutlineColor.Blue) / 255.0f, 1.0f };
-
-		ImGui::GetWindowDrawList()->AddCircle(CanvasPos + ImVec2(static_cast<float>(iCX), static_cast<float>(iCY)), static_cast<float>(iR), ImGui::ColorConvertFloat4ToU32(ImFillColor),0, static_cast<float>(iLineWidth));
-	}
-}
-
-void DasherUIScreen::Polyline(point* Points, int Number, int iWidth, int Colour)
-{
-	const Dasher::CColourIO::ColourInfo::PaletteColor LineColor = this->pColorScheme->Colors[Colour];
-	const ImVec4 ImLineColor = { static_cast<float>(LineColor.Red) / 255.0f, static_cast<float>(LineColor.Green) / 255.0f, static_cast<float>(LineColor.Blue) / 255.0f, 1.0f };
-
-	std::vector<ImVec2> points;
-
-	for(unsigned int i = 0; i < Number; i++)
-	{
-		points.push_back(CanvasPos + ImVec2(static_cast<float>(Points[i].x), static_cast<float>(Points[i].y)));
-	}
-
-	ImGui::GetWindowDrawList()->AddPolyline(points.data(), Number, ImGui::ColorConvertFloat4ToU32(ImLineColor), 0, static_cast<float>(iWidth));
-}
-
-void DasherUIScreen::Polygon(point* Points, int Number, int fillColour, int outlineColour, int lineWidth)
-{
-	const Dasher::CColourIO::ColourInfo::PaletteColor FillColor = this->pColorScheme->Colors[fillColour];
-	const ImVec4 ImFillColor = { static_cast<float>(FillColor.Red) / 255.0f, static_cast<float>(FillColor.Green) / 255.0f, static_cast<float>(FillColor.Blue) / 255.0f, 1.0f };
-
-	std::vector<ImVec2> points;
-
-	for (unsigned int i = 0; i < Number; i++)
-	{
-		points.push_back(CanvasPos + ImVec2(static_cast<float>(Points[i].x), static_cast<float>(Points[i].y)));
-	}
-
-	ImGui::GetWindowDrawList()->AddConvexPolyFilled(points.data(), Number, ImGui::ColorConvertFloat4ToU32(ImFillColor));
-
-	if(lineWidth > 0)
-	{
-		Polyline(Points, Number, lineWidth, outlineColour);
-	}
-}
-
 void DasherUIScreen::Display(){}
-
-void DasherUIScreen::SetColourScheme(const Dasher::CColourIO::ColourInfo* pColourScheme)
-{
-	this->pColorScheme = pColourScheme;
-}
 
 bool DasherUIScreen::IsPointVisible(Dasher::screenint, Dasher::screenint){
 	return true;
@@ -123,4 +41,72 @@ bool DasherUIScreen::GetScreenCoords(Dasher::screenint& iX, Dasher::screenint& i
 	iX = static_cast<Dasher::screenint>(MousePos.x - CanvasPos.x);
 	iY = static_cast<Dasher::screenint>(MousePos.y - CanvasPos.y);
 	return true;
+}
+
+void DasherUIScreen::DrawString(Label* label, Dasher::screenint x, Dasher::screenint y, unsigned iFontSize, const Dasher::ColorPalette::Color& color)
+{
+	const ImVec4 ImColor = { static_cast<float>(color.Red) / 255.0f, static_cast<float>(color.Green) / 255.0f, static_cast<float>(color.Blue) / 255.0f, static_cast<float>(color.Alpha) / 255.0f };
+	const ImVec2 Pos = { static_cast<float>(x),static_cast<float>(y)};
+	ImGui::GetWindowDrawList()->AddText(Font, static_cast<float>(iFontSize), Pos + CanvasPos, ImGui::ColorConvertFloat4ToU32(ImColor), label->m_strText.c_str());
+}
+
+void DasherUIScreen::DrawRectangle(Dasher::screenint x1, Dasher::screenint y1, Dasher::screenint x2, Dasher::screenint y2, const Dasher::ColorPalette::Color& color, const Dasher::ColorPalette::Color& outlineColor, int iThickness)
+{
+	const ImVec4 ImFillColor = { static_cast<float>(color.Red) / 255.0f, static_cast<float>(color.Green) / 255.0f, static_cast<float>(color.Blue) / 255.0f, static_cast<float>(color.Alpha) / 255.0f };
+	const ImVec2 p1 = { static_cast<float>(x1), static_cast<float>(y1)};
+	const ImVec2 p2 = { static_cast<float>(x2), static_cast<float>(y2)};
+
+	ImGui::GetWindowDrawList()->AddRectFilled(CanvasPos + p1, CanvasPos + p2, ImGui::ColorConvertFloat4ToU32(ImFillColor));
+
+	if(iThickness > 0)
+	{
+		const ImVec4 ImOutlineColor = { static_cast<float>(outlineColor.Red) / 255.0f, static_cast<float>(outlineColor.Green) / 255.0f, static_cast<float>(outlineColor.Blue) / 255.0f, static_cast<float>(outlineColor.Alpha) / 255.0f };
+		ImGui::GetWindowDrawList()->AddRect(CanvasPos + p1, CanvasPos + p2, ImGui::ColorConvertFloat4ToU32(ImOutlineColor),0,0, static_cast<float>(iThickness));
+	}
+}
+
+void DasherUIScreen::DrawCircle(Dasher::screenint iCX, Dasher::screenint iCY, Dasher::screenint iR, const Dasher::ColorPalette::Color& fillColor, const Dasher::ColorPalette::Color& lineColor, int iLineWidth)
+{
+	const ImVec4 ImFillColor = { static_cast<float>(fillColor.Red) / 255.0f, static_cast<float>(fillColor.Green) / 255.0f, static_cast<float>(fillColor.Blue) / 255.0f, static_cast<float>(fillColor.Alpha) / 255.0f };
+	ImGui::GetWindowDrawList()->AddCircleFilled(CanvasPos + ImVec2(static_cast<float>(iCX), static_cast<float>(iCY)), static_cast<float>(iR), ImGui::ColorConvertFloat4ToU32(ImFillColor));
+
+	if (iLineWidth > 0)
+	{
+		const ImVec4 ImOutlineColor = { static_cast<float>(lineColor.Red) / 255.0f, static_cast<float>(lineColor.Green) / 255.0f, static_cast<float>(lineColor.Blue) / 255.0f, static_cast<float>(lineColor.Alpha) / 255.0f };
+
+		ImGui::GetWindowDrawList()->AddCircle(CanvasPos + ImVec2(static_cast<float>(iCX), static_cast<float>(iCY)), static_cast<float>(iR), ImGui::ColorConvertFloat4ToU32(ImFillColor),0, static_cast<float>(iLineWidth));
+	}
+}
+
+void DasherUIScreen::Polyline(point* Points, int Number, int iWidth, const Dasher::ColorPalette::Color& color)
+{
+	const ImVec4 ImLineColor = { static_cast<float>(color.Red) / 255.0f, static_cast<float>(color.Green) / 255.0f, static_cast<float>(color.Blue) / 255.0f, static_cast<float>(color.Alpha) / 255.0f };
+
+	std::vector<ImVec2> points;
+
+	for(int i = 0; i < Number; i++)
+	{
+		points.push_back(CanvasPos + ImVec2(static_cast<float>(Points[i].x), static_cast<float>(Points[i].y)));
+	}
+
+	ImGui::GetWindowDrawList()->AddPolyline(points.data(), Number, ImGui::ColorConvertFloat4ToU32(ImLineColor), 0, static_cast<float>(iWidth));
+}
+
+void DasherUIScreen::Polygon(point* Points, int Number, const Dasher::ColorPalette::Color& fillColor, const Dasher::ColorPalette::Color& outlineColor, int lineWidth)
+{
+    const ImVec4 ImFillColor = { static_cast<float>(fillColor.Red) / 255.0f, static_cast<float>(fillColor.Green) / 255.0f, static_cast<float>(fillColor.Blue) / 255.0f, static_cast<float>(fillColor.Alpha) / 255.0f };
+
+	std::vector<ImVec2> points;
+
+	for (int i = 0; i < Number; i++)
+	{
+		points.push_back(CanvasPos + ImVec2(static_cast<float>(Points[i].x), static_cast<float>(Points[i].y)));
+	}
+
+	ImGui::GetWindowDrawList()->AddConvexPolyFilled(points.data(), Number, ImGui::ColorConvertFloat4ToU32(ImFillColor));
+
+	if(lineWidth > 0)
+	{
+		Polyline(Points, Number, lineWidth, outlineColor);
+	}
 }
