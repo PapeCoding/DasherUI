@@ -58,7 +58,7 @@ add_subdirectory("Thirdparty/nativefiledialog-extended")
 # DasherUI
 ###############################
 
-IF (WIN32)
+IF (MSVC)
 	# Hide console window
 	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup")
 ENDIF()
