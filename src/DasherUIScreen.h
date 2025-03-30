@@ -20,7 +20,6 @@ public:
 	bool IsPointVisible(Dasher::screenint x, Dasher::screenint y) override;
 		
 	bool SetCanvasSize(ImVec2 CanvasPos, ImVec2 CanvasSize);
-
 	bool GetScreenCoords(Dasher::screenint& iX, Dasher::screenint& iY, Dasher::CDasherView* pView) override;
 
 private:

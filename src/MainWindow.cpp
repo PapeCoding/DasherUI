@@ -18,6 +18,7 @@ MainWindow::MainWindow()
 	Controller->Initialize();
 
 	Controller->GetPermittedValues(Dasher::SP_ALPHABET_ID, Alphabets);
+	Controller->GetPermittedValues(Dasher::SP_COLOUR_ID, ColorPalettes);
 }
 
 #define FORWARD_KEY(ImGui_Key, DasherKey) { \
@@ -105,10 +106,16 @@ bool MainWindow::render(float DeltaTime)
 					Controller->SetLongParameter(Dasher::LP_MAX_BITRATE, speed);
 				}
 
-				static int item_current = 0;
-				if(ImGui::Combo("Alphabet", &item_current, [](void* data, int idx, const char** out_text) { *out_text = static_cast<const std::vector<std::string>*>(data)->at(idx).c_str(); return true; }, (void*)&Alphabets, static_cast<int>(Alphabets.size()), 10))
+				static int item_current_alphabet = 0;
+				if(ImGui::Combo("Alphabet", &item_current_alphabet, [](void* data, int idx, const char** out_text) { *out_text = static_cast<const std::vector<std::string>*>(data)->at(idx).c_str(); return true; }, (void*)&Alphabets, static_cast<int>(Alphabets.size()), 10))
 				{
-					Controller->SetStringParameter(Dasher::SP_ALPHABET_ID, Alphabets[item_current]);
+					Controller->SetStringParameter(Dasher::SP_ALPHABET_ID, Alphabets[item_current_alphabet]);
+				}
+
+				static int item_current_colorpalette = 0;
+				if(ImGui::Combo("Color Palette", &item_current_colorpalette, [](void* data, int idx, const char** out_text) { *out_text = static_cast<const std::vector<std::string>*>(data)->at(idx).c_str(); return true; }, (void*)&ColorPalettes, static_cast<int>(ColorPalettes.size()), 10))
+				{
+					Controller->SetStringParameter(Dasher::SP_COLOUR_ID, ColorPalettes[item_current_colorpalette]);
 				}
 
 	            ImGui::EndMenu();

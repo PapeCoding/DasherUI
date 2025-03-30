@@ -3,7 +3,7 @@
 #include "MainWindow.h"
 #include "imgui/imgui_internal.h"
 
-DasherUIScreen::DasherUIScreen(): Dasher::CDasherScreen(100,100), CScreenCoordInput(_("Mouse Input"))
+DasherUIScreen::DasherUIScreen(): Dasher::CDasherScreen(100,100), CScreenCoordInput("Mouse Input")
 {
 	Font = MainWindow::LoadFonts(50.0f);
 }
@@ -93,7 +93,7 @@ bool DasherUIScreen::IsPointVisible(Dasher::screenint, Dasher::screenint){
 	return true;
 }
 
-bool DasherUIScreen::SetCanvasSize(const ImVec2 position, const ImVec2 size)
+bool DasherUIScreen::SetCanvasSize(ImVec2 position, ImVec2 size)
 {
 	if(fabs(this->CanvasSize.x - size.x) > std::numeric_limits<float>::epsilon() || fabs(this->CanvasSize.y - size.y) > std::numeric_limits<float>::epsilon())
 	{

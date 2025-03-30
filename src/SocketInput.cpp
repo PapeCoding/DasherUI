@@ -20,7 +20,7 @@ SocketInput::~SocketInput()
 
 bool SocketInput::GetScreenCoords(Dasher::screenint& iX, Dasher::screenint& iY, Dasher::CDasherView* pView)
 {
-	const Dasher::CDasherView::ScreenRegion screenRegion = pView->VisibleRegion();
+	const Dasher::CDasherView::DasherCoordScreenRegion screenRegion = pView->VisibleRegion();
 
 	const double vectorLength = static_cast<double>(std::min(Dasher::CDasherModel::ORIGIN_Y - screenRegion.minY, screenRegion.maxY - Dasher::CDasherModel::ORIGIN_Y));
 	const double normalization = sqrt(lastRelativeX * lastRelativeX + lastRelativeY * lastRelativeY);

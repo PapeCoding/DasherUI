@@ -90,13 +90,7 @@ void DasherController::CreateModules()
 {
 	CDashIntfScreenMsgs::CreateModules();
 
-	GetModuleManager()->RegisterInputDeviceModule(ScreenModule.get());
-
-	SocketInputModule = std::make_shared<SocketInput>(m_pSettingsStore, this, m_pFramerate);
-	GetModuleManager()->RegisterInputDeviceModule(SocketInputModule.get());
-	SocketInputModule->startListen();
-
-	GetModuleManager()->SetDefaultInputDevice(SocketInputModule.get());
+    GetModuleManager()->RegisterInputDeviceModule(ScreenModule.get(), true);
 }
 
 void DasherController::CopyToClipboard(const std::string& text)
