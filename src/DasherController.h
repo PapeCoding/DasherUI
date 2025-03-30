@@ -6,6 +6,9 @@
 #include "imgui_internal.h"
 #include <memory>
 
+#include "OSOutput.h"
+#include "SocketInput.h"
+
 
 class DasherController : public Dasher::CDashIntfScreenMsgs
 {
@@ -14,11 +17,11 @@ public:
 
 	void editOutput(const std::string& strText, Dasher::CDasherNode* pNode) override;
 	void editDelete(const std::string& strText, Dasher::CDasherNode* pNode) override;
-	unsigned ctrlMove(bool bForwards, Dasher::CControlManager::EditDistance dist) override;
-	unsigned ctrlDelete(bool bForwards, Dasher::CControlManager::EditDistance dist) override;
+	unsigned ctrlMove(bool bForwards, Dasher::EditDistance dist) override;
+	unsigned ctrlDelete(bool bForwards, Dasher::EditDistance dist) override;
 	std::string GetContext(unsigned iStart, unsigned iLength) override;
 	std::string GetAllContext() override;
-	std::string GetTextAroundCursor(Dasher::CControlManager::EditDistance iDist) override;
+	std::string GetTextAroundCursor(Dasher::EditDistance iDist) override;
 	int GetAllContextLenght() override;
 
 	void Initialize();
@@ -44,4 +47,6 @@ private:
 
 	//Modules
 	std::shared_ptr<DasherUIScreen> ScreenModule;
+	std::shared_ptr<SocketInput> SocketInputModule;
+	std::shared_ptr<OSOutput> OSOutputModule;
 };

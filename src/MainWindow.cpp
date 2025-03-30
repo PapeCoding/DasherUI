@@ -8,7 +8,7 @@
 
 MainWindow::MainWindow()
 {
-	ImGui::SetCurrentFont(LoadFonts(14.0f));
+	ImGui::SetCurrentFont(LoadFonts(22.0f));
 
 	Settings = std::make_unique<Dasher::XmlSettingsStore>("Settings.xml", this);
 	Settings->Load();
@@ -18,7 +18,6 @@ MainWindow::MainWindow()
 	Controller->Initialize();
 
 	Controller->GetPermittedValues(Dasher::SP_ALPHABET_ID, Alphabets);
-
 }
 
 #define FORWARD_KEY(ImGui_Key, DasherKey) { \

@@ -60,7 +60,7 @@ add_subdirectory("Thirdparty/nativefiledialog-extended")
 
 IF (MSVC)
 	# Hide console window
-	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup")
+	#set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup")
 ENDIF()
 
 ADD_Executable(DasherUI
@@ -70,11 +70,20 @@ ADD_Executable(DasherUI
 	${PROJECT_SOURCE_DIR}/src/MainWindow.h
 	${PROJECT_SOURCE_DIR}/src/DasherUIScreen.cpp
 	${PROJECT_SOURCE_DIR}/src/DasherUIScreen.h
+	${PROJECT_SOURCE_DIR}/src/SocketInput.cpp
+	${PROJECT_SOURCE_DIR}/src/SocketInput.h
+	${PROJECT_SOURCE_DIR}/src/OSOutput.cpp
+	${PROJECT_SOURCE_DIR}/src/OSOutput.h
 	${PROJECT_SOURCE_DIR}/src/main.cpp
 )
 target_include_directories(DasherUI PUBLIC ${CMAKE_CURRENT_LIST_DIR}/Thirdparty/)
 add_dependencies(DasherUI imgui glfw DasherCore)
 target_link_libraries(DasherUI PRIVATE imgui glfw OpenGL::GL DasherCore nfd)
+
+###############################
+# Third Party Includes
+###############################
+target_include_directories(DasherUI PRIVATE ${PROJECT_SOURCE_DIR}/Thirdparty/asio/asio/include/)
 
 ###############################
 # Setting up deloyment
@@ -83,7 +92,7 @@ target_link_libraries(DasherUI PRIVATE imgui glfw OpenGL::GL DasherCore nfd)
 # Copy Data files
 file(GLOB RESOURCE_FILES
   ${PROJECT_SOURCE_DIR}/DasherCore/Data/alphabets/alphabet*.xml
-  ${PROJECT_SOURCE_DIR}/DasherCore/Data/colours/colour*.xml
+  ${PROJECT_SOURCE_DIR}/DasherCore/Data/colors/color*.xml
   ${PROJECT_SOURCE_DIR}/DasherCore/Data/control/control*.xml
   ${PROJECT_SOURCE_DIR}/DasherCore/Data/training/training*.txt
 )

@@ -6,6 +6,8 @@ DasherController::DasherController(Dasher::CSettingsStore* pSettingsStore): CDas
 {
 	ScreenModule = std::make_shared<DasherUIScreen>();
 	CDashIntfScreenMsgs::ChangeScreen(ScreenModule.get());
+
+	OSOutputModule = std::make_unique<OSOutput>();
 }
 
 void DasherController::editOutput(const std::string& strText, Dasher::CDasherNode* pNode) {
@@ -15,6 +17,7 @@ void DasherController::editOutput(const std::string& strText, Dasher::CDasherNod
 	}
 	Buffer.append(strText);
 	Cursor += static_cast<unsigned int>(strText.length());
+	OSOutputModule->outputCharacter(strText);
 	CDasherInterfaceBase::editOutput(strText, pNode);
 }
 
@@ -22,28 +25,28 @@ void DasherController::editDelete(const std::string& strText, Dasher::CDasherNod
 	if(0 == Buffer.compare(Buffer.length() - strText.length(), strText.length(), strText))
 	{
 		Buffer.erase(Buffer.length() - strText.length(), strText.length());
+		OSOutputModule->deleteCharacter();
 	}
 	CDasherInterfaceBase::editDelete(strText, pNode);
 }
 
-unsigned DasherController::ctrlMove(bool bForwards, Dasher::CControlManager::EditDistance dist)
+unsigned DasherController::ctrlMove(bool bForwards, Dasher::EditDistance dist)
 {
-	if (dist == Dasher::CControlManager::EditDistance::EDIT_CHAR) {
+	if (dist == Dasher::EditDistance::EDIT_CHAR) {
 		if (bForwards) Cursor++;
 		else Cursor--;
 	}
 	return Cursor;
 }
 
-unsigned DasherController::ctrlDelete(bool bForwards, Dasher::CControlManager::EditDistance dist)
+unsigned DasherController::ctrlDelete(bool bForwards, Dasher::EditDistance dist)
 {
-	if(dist == Dasher::CControlManager::EditDistance::EDIT_CHAR) {
+	if(dist == Dasher::EditDistance::EDIT_CHAR) {
 
 		Buffer.erase(Cursor - (bForwards ? 0 : 1), 1);
 	}
 	if(!bForwards) Cursor--;
 	return Cursor;
-
 }
 
 std::string DasherController::GetContext(unsigned iStart, unsigned iLength)
@@ -58,9 +61,9 @@ std::string DasherController::GetAllContext()
 	return CurrentBuffer;
 }
 
-std::string DasherController::GetTextAroundCursor(Dasher::CControlManager::EditDistance iDist) {
+std::string DasherController::GetTextAroundCursor(Dasher::EditDistance iDist) {
 	if (Buffer.length() > Cursor && Buffer.length() >= 2) {
-		if (iDist == Dasher::CControlManager::EditDistance::EDIT_CHAR) {
+		if (iDist == Dasher::EditDistance::EDIT_CHAR) {
 			return Buffer.substr(Cursor - 1, 2);
 		}
 
@@ -87,8 +90,13 @@ void DasherController::CreateModules()
 {
 	CDashIntfScreenMsgs::CreateModules();
 
-	RegisterModule(ScreenModule.get());
-	SetDefaultInputDevice(ScreenModule.get());
+	GetModuleManager()->RegisterInputDeviceModule(ScreenModule.get());
+
+	SocketInputModule = std::make_shared<SocketInput>(m_pSettingsStore, this, m_pFramerate);
+	GetModuleManager()->RegisterInputDeviceModule(SocketInputModule.get());
+	SocketInputModule->startListen();
+
+	GetModuleManager()->SetDefaultInputDevice(SocketInputModule.get());
 }
 
 void DasherController::CopyToClipboard(const std::string& text)
