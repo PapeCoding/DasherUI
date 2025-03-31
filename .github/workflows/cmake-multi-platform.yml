@@ -55,6 +55,11 @@ jobs:
       run: |
         echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
 
+    - name:  Install dependencies on ubuntu
+      # Install thirdparty dependiencies on ubuntu
+      if: matrix.os == 'ubuntu-latest'
+      run: sudo apt install -y libgl1-mesa-dev libxrandr-dev libxinerama-dev libxkbfile-dev libxcursor-dev libxi-dev libgtk-3-dev
+
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
       # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type

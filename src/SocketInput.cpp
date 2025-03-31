@@ -1,7 +1,10 @@
 #include "SocketInput.h"
 
 #include <I18n.h>
+#include <cmath>
 #include <thread>
+#include <algorithm>
+#include <iostream>
 
 #include "DasherInterfaceBase.h"
 #include "DasherModel.h"

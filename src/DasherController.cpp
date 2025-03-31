@@ -1,4 +1,5 @@
 #include "DasherController.h"
+#include <iostream>
 
 class XmlServerStore;
 
