@@ -60,7 +60,7 @@ void DasherUIScreen::Polyline(point* Points, int Number, int iWidth, const Dashe
 
 	std::vector<ImVec2> points;
 
-	for(unsigned int i = 0; i < Number; i++)
+	for(int i = 0; i < Number; i++)
 	{
 		points.push_back(CanvasPos + ImVec2(static_cast<float>(Points[i].x), static_cast<float>(Points[i].y)));
 	}
@@ -74,7 +74,7 @@ void DasherUIScreen::Polygon(point* Points, int Number, const Dasher::ColorPalet
 
 	std::vector<ImVec2> points;
 
-	for (unsigned int i = 0; i < Number; i++)
+	for (int i = 0; i < Number; i++)
 	{
 		points.push_back(CanvasPos + ImVec2(static_cast<float>(Points[i].x), static_cast<float>(Points[i].y)));
 	}
