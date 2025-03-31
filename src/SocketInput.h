@@ -1,9 +1,12 @@
 #pragma once
 
 #include "DasherInput.h"
+#include "DefaultFilter.h"
+
+#ifdef _WIN32
+    #include <SDKDDKVer.h> //Selects version for ASIO on Windows
+#endif
 #include "asio.hpp"
-#include "DashIntfSettings.h"
-#include "PressFilter.h"
 
 class SocketInput : public Dasher::CScreenCoordInput, public Dasher::CDefaultFilter
 {

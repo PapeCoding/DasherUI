@@ -2,6 +2,7 @@
 
 #include <I18n.h>
 #include <thread>
+#include <iostream>
 
 #include "DasherInterfaceBase.h"
 #include "DasherModel.h"
