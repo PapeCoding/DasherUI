@@ -12,7 +12,7 @@
 	branch = master
 [submodule "DasherCore"]
 	path = DasherCore
-	url = https://github.com/PapeCoding/DasherCore
+	url = https://github.com/dasher-project/DasherCore
 [submodule "Thirdparty/nativefiledialog-extended"]
 	path = Thirdparty/nativefiledialog-extended
 	url = https://github.com/btzy/nativefiledialog-extended.git
